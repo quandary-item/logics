@@ -2,29 +2,25 @@ module Main where
 
 import Lib
 
-data Logic t = Leaf t
-             | Neg (Logic t)
-             | XOr (Logic t) (Logic t)
-             | Conj (Logic t) (Logic t)
-             | Disj (Logic t) (Logic t) deriving Show
+data BinOp = Conj | Disj | XOr | Impl deriving (Eq, Show)
 
-assoc :: Logic a -> Either () (Logic a)
-assoc (Conj a (Conj b c)) = Right $ Conj (Conj a b) c
-assoc (Conj (Conj a b) c) = Right $ Conj a (Conj b c)
-assoc _                   = Left ()
+data Logic t = Val t | Bin BinOp (Logic t) (Logic t) deriving Show
 
-decompXor :: Logic a -> Maybe (Logic a)
-decompXor (XOr l r) = Just $ Conj (Disj l r) (Neg $ Conj l r)
-decompXor _         = Nothing
+class Rule r where
+  applyRule :: r -> Logic t -> Either () (Logic t)
 
-deMorgan :: Logic a -> Maybe (Logic a)
-deMorgan (Conj l r) = Just $ Neg $ Disj (Neg l) (Neg r)
-deMorgan (Disj l r) = Just $ Neg $ Conj (Neg l) (Neg r)
-deMorgan _          = Nothing
 
-cancelNeg :: Logic a -> Logic a
-cancelNeg (Neg (Neg a)) = a
-cancelNeg a             = a
+commutativeBinOps = [Conj, Disj, XOr]
+
+data Commute = Commute BinOp
+instance Rule Commute where
+  applyRule (Commute binOp) (Bin binOp' l r)
+    | binOp == binOp' && binOp `elem` commutativeBinOps = Right $ Bin binOp r l
+    | otherwise           = Left ()
+  applyRule _ _ = Left ()
+
+instance Show Commute where
+  show (Commute binOp) = show binOp ++ " is commutative"
 
 main :: IO ()
 main = someFunc
