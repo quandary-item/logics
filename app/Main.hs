@@ -73,5 +73,15 @@ applyRule (Intro XOr) (Bin Conj (Bin Disj l r) (Un Neg (Bin Conj l' r')))
 
 applyRule _ _ = Left ()
 
+doRules :: (Eq t, Show t) => (Logic t) -> [CompoundRule] -> IO ()
+doRules logic [] = putStrLn $ show logic
+doRules logic (rule:rules) = do
+  putStrLn $ show logic
+  putStrLn $ "applying " ++ show rule
+
+  case applyCompoundRule rule logic of
+    Right logic' -> doRules logic' rules
+    Left () -> pure ()
+
 main :: IO ()
 main = someFunc
