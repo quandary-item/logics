@@ -3,8 +3,9 @@ import Data.List
 import Lib
 
 data BinOp = Conj | Disj | XOr | Impl deriving (Eq, Show)
+data UnOp = Neg deriving (Eq, Show)
 
-data Logic t = Val t | Bin BinOp (Logic t) (Logic t) deriving (Eq, Show)
+data Logic t = Val t | Un UnOp (Logic t) | Bin BinOp (Logic t) (Logic t) deriving (Eq, Show)
 
 data CompoundRule = DoLeft CompoundRule | DoRight CompoundRule | Do Rule deriving Show
 
@@ -24,7 +25,9 @@ data Rule = Commutation BinOp
           | Association1 BinOp
           | Association2 BinOp          
           | Distribution1 BinOp BinOp
-          | Distribution2 BinOp BinOp deriving Show
+          | Distribution2 BinOp BinOp
+          | Intro BinOp
+          | Elim BinOp deriving Show
 
 commutes :: BinOp -> Bool
 commutes binOp = binOp `elem` [Conj, Disj, XOr]
@@ -58,6 +61,15 @@ applyRule (Distribution1 binOp1 binOp2) (Bin binOp' a (Bin binOp'' b c))
 applyRule (Distribution2 binOp1 binOp2) (Bin binOp'' (Bin binOp' a b) (Bin binOp''' a' c))
   | a == a' && binOp1 == binOp' && binOp2 == binOp'' && binOp' == binOp''' && distributes binOp1 binOp2 = Right $ (Bin binOp' a (Bin binOp'' b c))
   | otherwise = Left ()
+
+applyRule (Elim XOr) (Bin binOp l r)
+  | binOp == XOr = Right $ Bin Conj (Bin Disj l r) (Un Neg $ Bin Conj l r)
+  | otherwise    = Left ()
+
+applyRule (Intro XOr) (Bin Conj (Bin Disj l r) (Un Neg (Bin Conj l' r')))
+  | l == l' && r == r' = Right $ Bin XOr l r
+  | otherwise    = Left ()
+
 
 applyRule _ _ = Left ()
 
