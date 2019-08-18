@@ -33,6 +33,8 @@ associates :: BinOp -> Bool
 associates binOp = binOp `elem` [Conj, Disj, XOr]
 
 distributes :: BinOp -> BinOp -> Bool
+distributes Conj Conj = True
+distributes Conj Disj = True
 distributes Conj XOr = True
 distributes _ _ = False
 
