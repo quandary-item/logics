@@ -1,11 +1,7 @@
 module Main where
 import Data.List
 import Lib
-
-data BinOp = Conj | Disj | XOr | Impl deriving (Eq, Show)
-data UnOp = Neg deriving (Eq, Show)
-
-data Logic t = Val t | Un UnOp (Logic t) | Bin BinOp (Logic t) (Logic t) deriving (Eq, Show)
+import Logic
 
 data CompoundRule = DoLeft CompoundRule | DoRight CompoundRule | Do Rule deriving Show
 
