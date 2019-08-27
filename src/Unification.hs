@@ -1,5 +1,7 @@
 module Unification where
 
+import qualified Data.Map as Map
+
 import Logic
 
 -- given the antecendent or consequent of a nat deduction rule,
@@ -9,6 +11,9 @@ import Logic
 -- e.g.
 -- A, P, [] -> [A -> P]
 -- A, P, [A -> Q] -> Nothing
+
+unify' :: Logic t -> Logic t' -> Maybe (Map.Map t (Logic t'))
+unify' l r = unify l r Map.empty
 
 unify :: (Ord t, Eq t') => Logic t -> Logic t' -> Map.Map t (Logic t') -> Maybe (Map.Map t (Logic t'))
 unify (Val a) p assignment = case lookupRes of
