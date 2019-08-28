@@ -32,6 +32,11 @@ distributes binOp1 binOp2 = ( Bin binOp1 vA (Bin binOp2 vB vC)
                             , Bin binOp2 (Bin binOp1 vA vB) (Bin binOp1 vA vC)
                             )
 
+deMorgan :: BinOp -> BinOp -> Rule'
+deMorgan binOp1 binOp2 = ( Bin binOp1 vA vB
+                         , Un Neg $ Bin binOp2 (Un Neg vA) (Un Neg vB)
+                         )
+
 allRules = [ elimXOr
            , commutes Conj
            , commutes Disj
@@ -42,6 +47,8 @@ allRules = [ elimXOr
            , distributes Conj Conj
            , distributes Conj Disj
            , distributes Conj XOr
+           , deMorgan Conj Disj
+           , deMorgan Disj Conj
            ]
 
 -- TODO: What other rules exist?
