@@ -2,7 +2,7 @@ module Logic where
 
 import qualified Data.Map as Map
 
-data BinOp = Conj | Disj | XOr | Impl deriving (Eq, Show, Generic)
+data BinOp = Conj | Disj | XOr | Impl | BImpl deriving (Eq, Show, Generic)
 data UnOp = Neg deriving (Eq, Show, Generic)
 
 data Logic t = Val t | Un UnOp (Logic t) | Bin BinOp (Logic t) (Logic t) deriving (Eq, Show, Generic)
