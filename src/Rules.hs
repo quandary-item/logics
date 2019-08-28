@@ -52,8 +52,19 @@ allRules = [ elimXOr
            ]
 
 -- TODO: What other rules exist?
+-- Modus ponens
+-- Modus tollens
+-- Syllogisms
+-- Dilemmas
+-- Double negation
+-- Transposition
+-- Material implication
+-- Material equivalence
+-- Exportation
+-- Importation
+-- Tautology
 -- DeMorgan's laws
--- Check Wikipedia page
+-- Check Wikipedia page for propositional calculus
 
 applyRuleForward :: (Eq t) => Rule' -> Logic t -> Maybe (Logic t)
 applyRuleForward (l, r) logic = case (unify' l logic) of
