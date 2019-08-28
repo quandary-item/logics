@@ -12,7 +12,7 @@ import Logic
 -- A, P, [] -> [A -> P]
 -- A, P, [A -> Q] -> Nothing
 
-unify' :: Logic t -> Logic t' -> Maybe (Map.Map t (Logic t'))
+unify' :: (Ord t, Eq t') => Logic t -> Logic t' -> Maybe (Map.Map t (Logic t'))
 unify' l r = unify l r Map.empty
 
 unify :: (Ord t, Eq t') => Logic t -> Logic t' -> Map.Map t (Logic t') -> Maybe (Map.Map t (Logic t'))
