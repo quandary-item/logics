@@ -30,11 +30,10 @@ unify (Un _ _) _ _ = Nothing
 
 -- TODO: redo using do-notation
 unify (Bin binOp l r) (Bin binOp' l' r') assignment
-  | binOp == binOp' = case (unify l l' assignment) of
-      Just assignment' -> case (unify r r' assignment') of
-        Just assignment'' -> Just assignment''
-        _ -> Nothing
-      _ -> Nothing
+  | binOp == binOp' = do
+      assignment'  <- unify l l' assignment
+      assignment'' <- unify r r' assignment'
+      pure assignment''
   | otherwise = Nothing
 
 unify (Bin _ _ _) _ _ = Nothing
