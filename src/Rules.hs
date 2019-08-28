@@ -44,6 +44,10 @@ allRules = [ elimXOr
            , distributes Conj XOr
            ]
 
+-- TODO: What other rules exist?
+-- DeMorgan's laws
+-- Check Wikipedia page
+
 applyRuleForward :: (Eq t) => Rule' -> Logic t -> Maybe (Logic t)
 applyRuleForward (l, r) logic = case (unify' l logic) of
   Just m  -> replace r m
